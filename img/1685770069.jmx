@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.4.1">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="测试计划" enabled="true">
+      <stringProp name="TestPlan.comments"></stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="用户定义的变量" enabled="true">
+        <collectionProp name="Arguments.arguments"/>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="select" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="循环控制器" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <intProp name="LoopController.loops">-1</intProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">50</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">10</stringProp>
+        <boolProp name="ThreadGroup.scheduler">true</boolProp>
+        <stringProp name="ThreadGroup.duration">300</stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <BeanShellPreProcessor guiclass="TestBeanGUI" testclass="BeanShellPreProcessor" testname="BeanShell" enabled="true">
+          <stringProp name="filename"></stringProp>
+          <stringProp name="parameters"></stringProp>
+          <boolProp name="resetInterpreter">false</boolProp>
+          <stringProp name="script">import java.util.UUID;
+import java.text.SimpleDateFormat;
+
+UUID uuid1=UUID.randomUUID();
+UUID uuid2=UUID.randomUUID();
+UUID uuid3=UUID.randomUUID();
+UUID uuid4=UUID.randomUUID();
+UUID uuid5=UUID.randomUUID();
+
+
+//把uuid中的‘-’去掉，然后传给zichuan。vars.put是beanshell的赋值函数
+vars.put(&quot;uuid32&quot;,(uuid1.toString()).toUpperCase().replaceAll(&quot;-&quot;,&quot;&quot;));
+vars.put(&quot;sbb_uuid&quot;,(uuid1.toString()).toUpperCase().replaceAll(&quot;-&quot;,&quot;&quot;));
+vars.put(&quot;sbbxx_uuid&quot;,(uuid2.toString()).toUpperCase().replaceAll(&quot;-&quot;,&quot;&quot;));
+vars.put(&quot;sqxh_uuid&quot;,(uuid3.toString()).toUpperCase().replaceAll(&quot;-&quot;,&quot;&quot;));
+vars.put(&quot;jylsh_uuid&quot;,(uuid4.toString()).toUpperCase().replaceAll(&quot;-&quot;,&quot;&quot;));
+vars.put(&quot;sbbxx_uuid2&quot;,(uuid5.toString()).toUpperCase().replaceAll(&quot;-&quot;,&quot;&quot;));
+//${__time(/100000,)}由函数助手生成，见下图 
+phone=${__time(/100000,)}+${__Random(1,100000,)};
+//phone是一个整数，这里将其转化为一个字符串并且赋给a
+String a=String.valueOf(phone);
+//将a设置为变量
+vars.put(&quot;phone&quot;,a);
+
+//不去掉‘-’的写法
+//vars.put(&quot;zichuan&quot;,(uuid1.toString()).toUpperCase());
+
+String numStr = &quot;&quot; ;       
+String trandStr = String.valueOf((Math.random() * 9 + 1) * 100000);     
+String dataStr = new SimpleDateFormat(&quot;ddHHMMSS&quot;).format(new Date());       
+numStr = trandStr.toString().substring(0, 4);      
+numStr = numStr + dataStr ;       
+ 
+
+//long max=999800000000L,min=100000000000L;
+//long randomNum = System.currentTimeMillis();  
+//long ran3 = (long) (randomNum%(max-min)+min);  
+vars.put(&quot;rand18w&quot;,dataStr)
+</stringProp>
+        </BeanShellPreProcessor>
+        <hashTree/>
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="sb_sbqk" enabled="true">
+          <stringProp name="filename">/servyou/data/sb_sbqk.csv</stringProp>
+          <stringProp name="fileEncoding">UTF-8</stringProp>
+          <stringProp name="variableNames">sb_sbqk_djxh,sb_sbqk_SKSSQQ,sb_sbqk_SKSSQZ,sb_sbqk_sbzl_dm</stringProp>
+          <boolProp name="ignoreFirstLine">false</boolProp>
+          <stringProp name="delimiter">,</stringProp>
+          <boolProp name="quotedData">false</boolProp>
+          <boolProp name="recycle">true</boolProp>
+          <boolProp name="stopThread">false</boolProp>
+          <stringProp name="shareMode">shareMode.all</stringProp>
+        </CSVDataSet>
+        <hashTree/>
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="ws_sqqk" enabled="true">
+          <stringProp name="filename">/servyou/data/ws_sqqk.csv</stringProp>
+          <stringProp name="fileEncoding">UTF-8</stringProp>
+          <stringProp name="variableNames">ws_sqqk_djxh</stringProp>
+          <boolProp name="ignoreFirstLine">false</boolProp>
+          <stringProp name="delimiter">,</stringProp>
+          <boolProp name="quotedData">false</boolProp>
+          <boolProp name="recycle">true</boolProp>
+          <boolProp name="stopThread">false</boolProp>
+          <stringProp name="shareMode">shareMode.all</stringProp>
+        </CSVDataSet>
+        <hashTree/>
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="ws_pzxx" enabled="true">
+          <stringProp name="filename">/servyou/data/ws_pzxx.csv</stringProp>
+          <stringProp name="fileEncoding">UTF-8</stringProp>
+          <stringProp name="variableNames">ws_pzxx_djxh</stringProp>
+          <boolProp name="ignoreFirstLine">false</boolProp>
+          <stringProp name="delimiter">,</stringProp>
+          <boolProp name="quotedData">false</boolProp>
+          <boolProp name="recycle">true</boolProp>
+          <boolProp name="stopThread">false</boolProp>
+          <stringProp name="shareMode">shareMode.all</stringProp>
+        </CSVDataSet>
+        <hashTree/>
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="uc_company_account" enabled="true">
+          <stringProp name="filename">/servyou/data/uc_company_account.csv</stringProp>
+          <stringProp name="fileEncoding">UTF-8</stringProp>
+          <stringProp name="variableNames">uc_djxh</stringProp>
+          <boolProp name="ignoreFirstLine">false</boolProp>
+          <stringProp name="delimiter">,</stringProp>
+          <boolProp name="quotedData">false</boolProp>
+          <boolProp name="recycle">true</boolProp>
+          <boolProp name="stopThread">false</boolProp>
+          <stringProp name="shareMode">shareMode.all</stringProp>
+        </CSVDataSet>
+        <hashTree/>
+        <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="djxh_count" enabled="true">
+          <stringProp name="CounterConfig.start">1</stringProp>
+          <stringProp name="CounterConfig.end">90000000000</stringProp>
+          <stringProp name="CounterConfig.incr">1</stringProp>
+          <stringProp name="CounterConfig.name">djxh_count</stringProp>
+          <stringProp name="CounterConfig.format">00000000000</stringProp>
+          <boolProp name="CounterConfig.per_user">false</boolProp>
+        </CounterConfig>
+        <hashTree/>
+        <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="sb_sbqk" enabled="false">
+          <stringProp name="dataSource">tuarasdb</stringProp>
+          <stringProp name="queryType">Select Statement</stringProp>
+          <stringProp name="query">select sbxh, djxh, nsrsbh, zsxm_dm, sbzl_dm, sbse, 
+         DATE_FORMAT(skssqq, &apos;%Y-%m-%d&apos;) skssqq, DATE_FORMAT(skssqz, &apos;%Y-%m-%d&apos;) skssqz, 
+         sbzt_dm, sbztms, qqjylsh, nbjylsh, wbjylsh, 
+         DATE_FORMAT(sbrq, &apos;%Y-%m-%d&apos;) sbrq, DATE_FORMAT(lrsj, &apos;%Y-%m-%d %H:%i:%s&apos;) lrsj, 
+         sblx_dm, qqjymxxh, zdkkbz, 
+         DATE_FORMAT(xgsj, &apos;%Y-%m-%d %H:%i:%s&apos;) xgsj, 
+         pzxh, dlrsbh, qqwjm, sbny, scpzxh, qdid ,cfbz,cfcs,account_id,swjg_dm,xgry, xgqd
+         from sb_sbqk
+       where djxh = ${sb_sbqk_djxh}
+      and skssqq = DATE_FORMAT(${sb_sbqk_SKSSQQ},&apos;%Y-%m-%d&apos;)
+      and skssqz = DATE_FORMAT(${sb_sbqk_SKSSQZ},&apos;%Y-%m-%d&apos;)
+      and sbzl_dm = ${sb_sbqk_sbzl_dm}
+      order by lrsj desc;</stringProp>
+          <stringProp name="queryArguments"></stringProp>
+          <stringProp name="queryArgumentsTypes"></stringProp>
+          <stringProp name="variableNames"></stringProp>
+          <stringProp name="resultVariable"></stringProp>
+          <stringProp name="queryTimeout"></stringProp>
+          <stringProp name="resultSetMaxRows"></stringProp>
+          <stringProp name="resultSetHandler">Store as String</stringProp>
+        </JDBCSampler>
+        <hashTree/>
+        <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="ws_sqqk" enabled="true">
+          <stringProp name="dataSource">tuarasdb</stringProp>
+          <stringProp name="queryType">Select Statement</stringProp>
+          <stringProp name="query">SELECT
+	a.sqxh sqxh,
+	a.swsx_dm swsx_dm,
+	a.blzt_dm blzt_dm,
+	a.lrsj lrsj
+FROM
+	WS_SQQK a
+WHERE
+
+	a.swsx_dm NOT IN (
+		&apos;110211&apos;,
+		&apos;110421&apos;,
+		&apos;200004&apos;,
+		&apos;200009&apos;,
+		&apos;700009&apos;
+	)
+	AND (a.djxh = &quot;10213302000000283473&quot;)
+	ORDER BY
+		a.lrsj DESC;</stringProp>
+          <stringProp name="queryArguments"></stringProp>
+          <stringProp name="queryArgumentsTypes"></stringProp>
+          <stringProp name="variableNames"></stringProp>
+          <stringProp name="resultVariable"></stringProp>
+          <stringProp name="queryTimeout"></stringProp>
+          <stringProp name="resultSetMaxRows"></stringProp>
+          <stringProp name="resultSetHandler">Store as String</stringProp>
+        </JDBCSampler>
+        <hashTree/>
+        <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="uc_cpmpany_account" enabled="false">
+          <stringProp name="dataSource">tuarasdb</stringProp>
+          <stringProp name="queryType">Select Statement</stringProp>
+          <stringProp name="query">select djxh,password,pwd_salt from uc_company_account where djxh =${uc_djxh};</stringProp>
+          <stringProp name="queryArguments"></stringProp>
+          <stringProp name="queryArgumentsTypes"></stringProp>
+          <stringProp name="variableNames"></stringProp>
+          <stringProp name="resultVariable"></stringProp>
+          <stringProp name="queryTimeout"></stringProp>
+          <stringProp name="resultSetMaxRows"></stringProp>
+          <stringProp name="resultSetHandler">Store as String</stringProp>
+        </JDBCSampler>
+        <hashTree/>
+        <JDBCSampler guiclass="TestBeanGUI" testclass="JDBCSampler" testname="多表" enabled="false">
+          <stringProp name="dataSource">tuarasdb</stringProp>
+          <stringProp name="queryType">Select Statement</stringProp>
+          <stringProp name="query">select t1.djxh,t2.lcslid
+from ws_sqqk t1,gzl_lcsl t2,gzl_lzrw t3
+where t1.sqxh = t2.sqxh
+and t2.lcslid = t3.lcslid
+and t1.blzt_dm in (&apos;00&apos;,&apos;01&apos;,&apos;02&apos;, &apos;10&apos;, &apos;03&apos;, &apos;06&apos;, &apos;13&apos;, &apos;14&apos;,&apos;30&apos;, &apos;96&apos;)
+and t1.LRSJ &gt;= DATE_FORMAT(&apos;2019-01-01&apos;,&apos;%Y-%m-%d&apos;)
+and t1.djxh = ${ws_pzxx_djxh};</stringProp>
+          <stringProp name="queryArguments"></stringProp>
+          <stringProp name="queryArgumentsTypes"></stringProp>
+          <stringProp name="variableNames"></stringProp>
+          <stringProp name="resultVariable"></stringProp>
+          <stringProp name="queryTimeout"></stringProp>
+          <stringProp name="resultSetMaxRows"></stringProp>
+          <stringProp name="resultSetHandler">Store as String</stringProp>
+        </JDBCSampler>
+        <hashTree/>
+        <JDBCDataSource guiclass="TestBeanGUI" testclass="JDBCDataSource" testname="TuarasDB-yw(dxfl)" enabled="true">
+          <boolProp name="autocommit">true</boolProp>
+          <stringProp name="checkQuery">select 1</stringProp>
+          <stringProp name="connectionAge">5000</stringProp>
+          <stringProp name="connectionProperties"></stringProp>
+          <stringProp name="dataSource">tuarasdb</stringProp>
+          <stringProp name="dbUrl">jdbc:mysql://80.27.177.2:3306/dzswj_yw_test?useOldAliasMetadataBehavior=true&amp;useUnicode=true&amp;characterEncoding=utf-8&amp;autoReconnect=true&amp;useSSL=false&amp;useLocalSessionState=true</stringProp>
+          <stringProp name="driver">com.mysql.jdbc.Driver</stringProp>
+          <stringProp name="initQuery"></stringProp>
+          <boolProp name="keepAlive">true</boolProp>
+          <stringProp name="password">******</stringProp>
+          <stringProp name="poolMax">0</stringProp>
+          <boolProp name="preinit">false</boolProp>
+          <stringProp name="timeout">10000</stringProp>
+          <stringProp name="transactionIsolation">DEFAULT</stringProp>
+          <stringProp name="trimInterval">60000</stringProp>
+          <stringProp name="username">root</stringProp>
+        </JDBCDataSource>
+        <hashTree/>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
