@@ -6,3 +6,4 @@
  #python manage.py makemigrations&&
  #python manage.py migrate&&
  uwsgi --ini /var/www/html/fileget/uwsgi.ini
+tail -f /tmp/fileget-uwsgi.log
