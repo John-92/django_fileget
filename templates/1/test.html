@@ -5,19 +5,41 @@
     <title>test for django</title>
 </head>
 <body>
-test for django
-<form class="form-horizontal" method="post" action="/file/" enctype="multipart/form-data">   <!-- enctype="multipart/form-data"  必须参数-->
-    {% csrf_token %}
+
+<a href="/download?filename=1">下载指定文件</a>
+
+
+
+{#<form method="post" action="/index1/" enctype="multipart/form-data" >#}
+{#<form class="form-horizontal" method="post"   enctype="multipart/form-data">   <!-- 同步方式enctype="multipart/form-data"  必须参数-->#}
+
     <div class="form-group">
-        <label for="inputImage" class="col-sm-2 control-label">标志图11片</label>
+        <label for="inputImage" class="col-sm-2 control-label">上传文件1功能</label>
         <div class="col-sm-10">
-            <input type="file" name="commodityImage" id="inputImage">
+            <input type="file" name="commodityImage" id="commodityImage">
         </div>
     </div>
     <div class="form-group">　　　　
-        <button type="submit" class="btn btn-danger">提 交</button>
+        <button type="submit" class="btn btn-danger" onclick="upload()">提 交</button>
     </div>
-</form>
+{#</form>#}
+
+<div>显示已上传成功的文件名
+    <p class="filename" id="filename"></p>
+</div>
+
+
+
+<p>显示目录下的所有内容</p>
+<table id="files">
+      <tr>
+{#           <td>单元格11</td>#}
+{#           <td>单元格12</td>#}
+{#            <td>单元格13</td>#}
+        </tr>
+</table>
+<button type="submit" class="btn btn-danger" onclick="show()">展示所有文件</button>
+
 
 <form class="form-horizontal" action="/showfile/" enctype="multipart/form-data">   <!-- enctype="multipart/form-data"  必须参数-->
     {% csrf_token %}
@@ -33,5 +55,91 @@ test for django
 </form>
 ssjjj{{ 99aaa }}
 {% for line in filecontent %}{{ line }}{% endfor %}
+<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+
+<script>
+    function upload() {
+        var formData = new FormData();
+        var file = document.getElementById('commodityImage').files[0];
+        console.log(file)
+        formData.append("file", file);
+        $.ajax({
+            url: "file/",{#请求发送到子url,比如是/index/file #}
+            type: "post",
+            data: formData,
+            dataType: "json",
+            cache: false,     //上传文件无需缓存
+            processData: false,//用于对data参数进行序列化处理 这里必须false
+            contentType: false, //必须*/
+            success: function (data) {
+                console.log("data.filename", data.filename);
+                console.log("data", data);
+                $("#filename").text( data.filename)
+                {#$("#filename").text("hhhSAA")#}
+                {#$("#imagess").attr("href", data.image)#}
+                alert('upload successfully')
+
+            },
+            error: function (data){
+                alert("error",data)
+            }
+    });
+  }
+
+  function show(){
+        {#alert("jjj")#}
+        $.ajax({
+            url: "/files/",{#请求发送到子url,比如是/index/file #}
+            type: "get",
+            data: "1",
+            dataType: "json",
+            cache: false,     //上传文件无需缓存
+            processData: false,//用于对data参数进行序列化处理 这里必须false
+            contentType: false, //必须*/
+            success: function (data) {
+                 $('#files').empty();//清空之前存在的内容
+                console.log("data", data);
+                $("#filename").text( data.filename)
+                var tb = document.getElementById("files");
+                var tradd=tb.insertRow(0)
+                fname='文件名'
+                fileLength='文件大小'
+                fileCreateTime='文件创建时间'
+                download='下载'
+                tradd.innerHTML='<td>'+fname+'</td><td>'+fileLength+'</td><td>'+fileCreateTime+'</td>'+download
+                for(var i = 0; i < data.filelist.length; i++){
+                     {#alert(data.filelist[i].filepath)#}
+                     {#var tr = tb.createElement("tr");#}
+                     {#// 5.添加单元格到表格行中#}
+                    tradd=tb.insertRow(1)
+                    tradd.style.background='green'
+                    fname=data.filelist[i].fname
+                    fileLength=data.filelist[i].fileLength
+                    fileCreateTime=data.filelist[i].fileCreateTime
+                    filename=data.filelist[i].filepath
+                    {#alert(fname)#}
+                    download='<input type="button" value="下载" onclick="download1(fname)">'
+
+                   tradd.innerHTML='<td>'+fname+'</td><td>'+fileLength+
+                    '</td><td>'+fileCreateTime+'</td>'+download
+                 {#alert(fname)#}
+
+                }
+
+
+
+            },
+            error: function (data){
+                alert("error",data)
+            }
+    });
+
+  }
+
+  function download1(filename){
+        location.href = '/download/' + filename
+  }
+
+</script>
 </body>
 </html>
