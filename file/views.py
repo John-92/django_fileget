@@ -107,14 +107,16 @@ def show_view(request):
                 filecontent = {'99aaa': "uuu", "showfile": r}
 
             print(filecontent.values())
-
-
-
-    # return render(request, '1/showfile.html',filecontent)
         return render(request, '1/showfile.html',filecontent)
 
 
 def download_template(request,filename):
+    """
+    下载文件
+    :param request: 请求
+    :param filename:文件名
+    :return:
+    """
     if not filename:
         filename='1.txt'
     filepath=os.path.join(os.path.join(settings.BASE_DIR, 'img'),filename)

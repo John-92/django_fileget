@@ -6,9 +6,7 @@
 </head>
 <body>
 
-<a href="/download?filename=1">下载指定文件</a>
-
-
+<a href="/download/1.txt">下载指定文件</a>
 
 {#<form method="post" action="/index1/" enctype="multipart/form-data" >#}
 {#<form class="form-horizontal" method="post"   enctype="multipart/form-data">   <!-- 同步方式enctype="multipart/form-data"  必须参数-->#}
@@ -27,7 +25,6 @@
 <div>显示已上传成功的文件名
     <p class="filename" id="filename"></p>
 </div>
-
 
 
 <p>显示目录下的所有内容</p>
@@ -59,8 +56,8 @@ ssjjj{{ 99aaa }}
 
 <script>
     function upload() {
-        var formData = new FormData();
-        var file = document.getElementById('commodityImage').files[0];
+        var formData = new FormData();//创建FormData对象,用于传输文件、图片等
+        var file = document.getElementById('commodityImage').files[0];//commodityImage为id是commodityImage的标签--<input type="file" name="commodityImage" id="commodityImage">
         console.log(file)
         formData.append("file", file);
         $.ajax({
@@ -74,9 +71,9 @@ ssjjj{{ 99aaa }}
             success: function (data) {
                 console.log("data.filename", data.filename);
                 console.log("data", data);
-                $("#filename").text( data.filename)
+                $("#filename").text( data.filename)//在id为filename的标签添加指定的值
                 {#$("#filename").text("hhhSAA")#}
-                {#$("#imagess").attr("href", data.image)#}
+                {#$("#imagess").attr("href", data.image)#}//在id为filename的标签添加指定的属性
                 alert('upload successfully')
 
             },
@@ -87,7 +84,6 @@ ssjjj{{ 99aaa }}
   }
 
   function show(){
-        {#alert("jjj")#}
         $.ajax({
             url: "/files/",{#请求发送到子url,比如是/index/file #}
             type: "get",
@@ -106,7 +102,8 @@ ssjjj{{ 99aaa }}
                 fileLength='文件大小'
                 fileCreateTime='文件创建时间'
                 download='下载'
-                tradd.innerHTML='<td>'+fname+'</td><td>'+fileLength+'</td><td>'+fileCreateTime+'</td>'+download
+                tradd.innerHTML= '<td>'+fname+'</td><td>'+fileLength+
+                                 '</td><td>'+fileCreateTime+'</td>'+download
                 for(var i = 0; i < data.filelist.length; i++){
                      {#alert(data.filelist[i].filepath)#}
                      {#var tr = tb.createElement("tr");#}
@@ -121,11 +118,10 @@ ssjjj{{ 99aaa }}
                     download='<input type="button" value="下载" onclick="download1(fname)">'
 
                    tradd.innerHTML='<td>'+fname+'</td><td>'+fileLength+
-                    '</td><td>'+fileCreateTime+'</td>'+download
+                                   '</td><td>'+fileCreateTime+'</td>'+download
                  {#alert(fname)#}
 
                 }
-
 
 
             },

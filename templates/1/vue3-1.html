@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!--<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14" ></script>-->
+<script src="vue.js" ></script>
+
+
+
+<div id="root">
+    {{ i }}
+    <input type="text" v-model="i">
+    <button @click="HandleAdd">add</button>
+    <ul>
+        <li v-for="li,index in lists"><!--li是元素值，index是索引值 -->
+            {{ li }}--->{{ index }}
+            <button @click="HandleDel(index)">del</button><!--可以将参数放在函数中，这里是列表的索引 -->
+        </li>
+    </ul>
+</div>
+<script>
+    obj={
+        data(){
+            return{
+                i:"88111",
+                lists:[1,2]
+            }
+        },
+        methods:{
+          HandleAdd(){//事件函数---往列表添加元素
+              this.lists.push(this.i)//在列表追加元素，必须要this表示对象的属性i,否则无法识别
+              this.i=""
+          },
+            HandleDel(index){//事件函数--往列表删除元素，index是索引值
+              console.log("del",index)
+              this.lists.splice(index,1)//删除index后的1个元素
+            }
+        }
+    }
+var app=Vue.createApp(obj).mount("#root")
+</script>
+</body>
+</html>

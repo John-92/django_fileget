@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!--<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14" ></script>-->
+<script src="vue.js" ></script>
+
+
+
+<div id="root">
+     <!--<my-component mes="from parent">ww</my-component>
+     <input type="text" v-model="ParentMessage">
+     <my-component :mes="ParentMessage">ww</my-component>-->
+    <p>总数{{ total }}</p>
+     <my-component
+       @increase="handleGetTotal">ww</my-component><!--increase是自定义事件 -->
+
+<!--   <p>hello world1</p> -->
+    {{ message }}<!-- 占位符将数据替换为Vue实例中data设置好的内容-->
+    <input v-model="message" />
+    <ul>
+        <li v-for="book in books">{{ book.name }}</li>
+    </ul>
+    <label >js</label>
+    	 <input type="radio" v-model="checked" :value="picked" id="js">
+    <p>checked{{ checked }}</p>
+    <p>picked{{ picked }}</p>
+     <label for="html">html</label>
+	<input type="checkbox" v-model="checked" value="html11" id="html1111">
+        <label for="css">css</label>
+    <input type="checkbox" v-model="checked" value="css" id="css">
+    <input type="checkbox" v-model="checked" :true-value="value1" :false-value="value2"  id="css">
+   <p>{{ checked }} checked || {{ value1 }} value1 || {{ value2 }} value2 ||</p>
+    <input type="text" v-model.lazy="ParentMessage">
+    <input type="text" v-model.trim="ParentMessage">
+    <p>选择的值{{ checked }}</p>
+</div>
+<script>
+    var data={
+        counter: 0
+
+    };
+
+    Vue.component('my-component',{
+      //template: '<div>{{message}}</div>',
+      props:['mes','message'],
+      template: '<div>\
+        <button @click="counter++" >ttt{{ counter}}{{ mes }}</button> \
+           <button @click="HandlerIncrease" >+1</button> \
+           </div>',
+      data: function(){
+          return {
+              counter:0
+          }
+      },
+        methods:{
+
+          HandlerIncrease: function (){
+                  this.counter++;
+                 this.$emit('increase',this.counter);
+        }
+        }
+
+    });
+    //局部注册组件
+   // var child={
+   //     template: '<div>This is the template111</div>'
+   // };
+    console.log("hello world");
+    var app = new Vue({
+        el:'#root',
+        //components:{
+         // 'my-component':child
+        //},
+        methods: {
+          handleGetTotal:function (total) {
+              this.total=total;
+          }
+        },
+        data:{
+                message:'hello vue',
+                books:[
+                    {'name':'aaa'},
+                    {'name':'bbb'},
+                    {'name':'ccc'},
+                ],
+               ParentMessage:'uuu',
+               picked: true,
+               checked: false,
+              total:0,
+            value1:'a',
+            value2:'b',
+
+            }
+
+        }
+    )
+</script>
+</body>
+</html>
