@@ -32,7 +32,7 @@
         methods:{
           HandleAdd(){//事件函数---往列表添加元素
               this.lists.push(this.i)//在列表追加元素，必须要this表示对象的属性i,否则无法识别
-              this.i=""
+              this.i=""//清空输入框，因为这是双向绑定，通过this.i可以直接操作输入框（只能是双向绑定，而不能是单向绑定）
           },
             HandleDel(index){//事件函数--往列表删除元素，index是索引值
               console.log("del",index)
@@ -40,7 +40,7 @@
             }
         }
     }
-var app=Vue.createApp(obj).mount("#root")
+var app=Vue.createApp(obj).mount("#root")//vue3必须要这样绑定，而不是vue2通过el属性绑定
 </script>
 </body>
 </html>
