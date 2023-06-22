@@ -7,36 +7,278 @@
 <body>
 <!--<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14" ></script>-->
 <script src="vue.js" ></script>
+<style>
+    .active{
+        background-color: red;
+    }
 
+    #overlay{
+        background: rgba(0,0,0,0.6);
+        width: 100%;
+        margin: auto;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+
+    #center{
+        background: #ffff;
+        border-radius: 5px;
+        /* 边框圆角 */
+        padding-top: 15px;
+        padding-left: 30px;
+        padding-bottom: 15px;
+        width: 290px;
+        height: 160px;
+        position: fixed;
+        margin: auto;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+    }
+
+    li {
+        display: flex;
+        justify-content: space-between;<!-- 与space-around的区别 靠两端显示-->
+        align-items: center;
+        padding: 10px;
+        border: 1px solid lightgray;
+    }
+
+    li img{
+        width: 100px;
+    }
+</style>
 
 
 <div id="root">
+
+    <div>
+        <p>单选框、多选框、选择器</p>
+    </div>
+
+    <div>
+    <p>筛选框的应用</p>
+    <select v-model="selected">
+        <option value="all">全选</option>
+        <option :value="0">未付款</option><!--注意，这个value应该是动态绑定，
+        因为state是数字，通过动态绑定将0从字符串转化为数字（js语法），否则selected会接收字符串的0 -->
+        <option :value="1">已取消</option>
+        <option :value="2">待发货</option>
+        <option :value="3">已完成</option>
+    </select>
+        <ul>
+    <!--template -->
+         <template v-for="({title,state},index) of datalist">
+             <li v-if="state===selected">
+                 {{ title }}
+             </li>
+             <!--因为datalist中的state没有all的状态，所以需要all这种情况作为特别情况显示出来 -->
+              <li v-if="selected==='all'">
+                 {{ title }}
+             </li>
+
+        </template>
+        </ul>
+
+  </div>
+
+    <!-- 模态框-->
+    <p>模态框的应用</p>
+    <div>
+    <button @click="isShow=!isShow">模态框</button>
+     <!-- 方式一：stop是阻止冒泡，也就是不会触发父类的事件 -->
+   <!--<div id="overlay" v-show="isShow" @click="isShow=false">
+       <div id="center"  @click.stop>
+            用户名<input/>
+            <button>登录</button>
+        </div>
+    </div>
+--></div>
+    <!--方式二 通过self,只有在点击这个dom本身才能触发，通过子类不会触发的事件 -->
+    <div id="overlay" v-show="isShow" @click.self="isShow=false">
+       <div id="center"  >
+            用户名<input/>
+            <button>登录</button>
+        </div>
+    </div>
+
     {{ i }}
+    <div>
+        <p>todolist案例</p>
     <input type="text" v-model="i">
     <button @click="HandleAdd">add</button>
     <ul>
-        <li v-for="li,index in lists"><!--li是元素值，index是索引值 -->
+        <li v-for="li,index in lists" :class="checkpoint===index?'active':''"
+            @click="handleclink(index)"><!--li是元素值，index是索引值 -->
             {{ li }}--->{{ index }}
+
             <button @click="HandleDel(index)">del</button><!--可以将参数放在函数中，这里是列表的索引 -->
         </li>
     </ul>
 </div>
+
+    <div>
+        <p>购物车项目</p>
+        <ul>
+            <li>
+                 <div>
+                     <input type="checkbox" value="" v-model="isAllChecked" @change="handleAllChanged">全选/全不选
+                 </div>
+            </li>
+            <template v-if="shoplist.length!=0">
+            <li v-for="(item,index) of shoplist" key="item.id" >
+             <div>
+
+                 <input type="checkbox" v-model="shopselectedList" :value="item" @change="handleItemChanged">
+             </div>
+                <div>
+                    <img :src="item.poster" width="200" height="100" alt="">
+                </div>
+                 <div>
+                     {{item.title}}
+                     <div style="color: red">价格：{{ item.price }}</div>
+                </div>
+                 <div>
+                    <button @click="item.number--" :disabled="item.number===1">-</button>
+                     {{ item.number }}
+                     <button @click="item.number++" :disabled="item.number===item.limit">+</button>
+                </div>
+                  <div>
+                    <button @click="shopselectedListDel(index,item.id)">删除</button>
+
+                </div>
+
+
+            </li>
+                    </template>
+            <li  v-else>
+                    <p>空空如也</p>
+            </li>
+
+            <li>
+            <div>
+                    总金额：{{ amountCalc }}
+                </div>
+            </li>
+            {{ shopselectedList }}
+        </ul>
+
+    </div>
+
+    </div>
 <script>
-    obj={
-        data(){
-            return{
-                i:"88111",
-                lists:[1,2]
+    obj= {
+        data() {
+            return {
+                i: "88111",
+                lists: [1, 2],
+                checkpoint: 0,
+                isShow: false,
+                selected: 0,
+                isAllChecked: false, //是否要全部勾选，默认是不勾选
+                datalist: [
+                    {
+                        title: "手机-未付款",
+                        state: 0
+                    },
+                    {
+                        title: "衣服-已取消订单",
+                        state: 1
+                    },
+                    {
+                        title: "aaa-待发货",
+                        state: 2
+                    }
+                ],
+                shopselectedList: [],
+                shoplist: [
+                    {
+                        id: 1,
+                        title: "git",
+                        price: 107,
+                        number: 1,
+                        poster: "https://img.zcool.cn/community/01811f5abc92fda801218207a45ce8.JPG@1280w_1l_2o_100sh.jpg",
+                        limit: 5
+                    },
+                    {
+                        id: 2,
+                        title: "jenkins",
+                        price: 100,
+                        number: 2,
+                        poster: "https://ts1.cn.mm.bing.net/th/id/R-C.864d27f27a8fb5a9211ed441d6f22138?rik=tgK5OsEHYXN6XA&riu=http%3a%2f%2fimg.yipic.cn%2fthumb%2fddeed5c7%2fd20105fb%2fa895b5f7%2f9bb0c778%2fbig_ddeed5c7d20105fba895b5f79bb0c778.png%3fx-oss-process%3dimage%2fformat%2cwebp%2fsharpen%2c100&ehk=gFrZ9claKVeo99lvOoTFh%2fbB7%2f9fdrvqbkhP%2f4byHqQ%3d&risl=&pid=ImgRaw&r=0",
+                        limit: 5
+                    },
+                    {
+                        id: 3,
+                        title: "CI",
+                        price: 10,
+                        number: 4,
+                        poster: "https://img.zcool.cn/community/017a2d59534d81a8012193a348c04e.jpg@1280w_1l_2o_100sh.jpg",
+                        limit: 5
+                    }
+                ]
             }
         },
-        methods:{
-          HandleAdd(){//事件函数---往列表添加元素
-              this.lists.push(this.i)//在列表追加元素，必须要this表示对象的属性i,否则无法识别
-              this.i=""//清空输入框，因为这是双向绑定，通过this.i可以直接操作输入框（只能是双向绑定，而不能是单向绑定）
-          },
-            HandleDel(index){//事件函数--往列表删除元素，index是索引值
-              console.log("del",index)
-              this.lists.splice(index,1)//删除index后的1个元素
+        computed:{
+            amountCalc() {
+                //累加方式一
+                var total = 0;
+                //for(var i=0;i<this.shopselectedList.length;i++){
+                //      total+=this.shopselectedList[i].number *  this.shopselectedList[i].price
+                //}
+
+                //累加方式二,更为方便，借用匿名函数，更方便
+                total = this.shopselectedList.reduce((total, item) => total + item.number * item.price, 0)
+                return total
+            }
+        },
+
+        methods: {
+            HandleAdd() {//事件函数---往列表添加元素
+                this.lists.push(this.i)//在列表追加元素，必须要this表示对象的属性i,否则无法识别
+                this.i = ""//清空输入框，因为这是双向绑定，通过this.i可以直接操作输入框（只能是双向绑定，而不能是单向绑定）
+            },
+            HandleDel(index) {//事件函数--往列表删除元素，index是索引值
+                console.log("del", index)
+                this.lists.splice(index, 1)//删除index后的1个元素
+            },
+            handleclink(index) {
+                this.checkpoint = index
+            },
+
+            shopselectedListDel(index, id) {
+                console.log("进入删除")
+                this.shoplist.splice(index, 1)
+                //注意：还需要将shopselectedList的列表进行更新，否则总金额的统计还是不会变
+                //方式1：借助过滤出不是这个id的商品的方式
+                this.shopselectedList = this.shopselectedList.filter(item => item.id != id)
+               //这个容易忽略，因为删除操作也会影响单个选项的勾选，需要更新状态
+                this.handleItemChanged()
+                //这是特殊情况，如果shoplist长度为0,则不勾选
+                if (this.shoplist.length === 0) {
+                    this.isAllChecked = false
+                }
+            }
+            ,
+            handleAllChanged() {
+                console.log('hhh')
+                console.log(this.isAllChecked)
+                //全选的本质就是选择所有的数据项，全不选的本质就是没有选择所有的数据项
+
+                this.shopselectedList = this.isAllChecked ? this.shoplist : []
+
+
+            },
+            handleItemChanged() {
+                console.log("jjj")
+                //如果长度一致则为全选（勾选状态），否则为不勾选状态
+                this.isAllChecked = this.shopselectedList.length === this.shoplist.length
+
             }
         }
     }
